@@ -53,7 +53,7 @@ metrics = {
     "version":{"type":"string", "sql":"SELECT version();"},
     "deleted_row_count":{"type":"int", "sql":"select sum(deleted_row_count) from v_monitor.delete_vectors;"},
     "deleted_vector_count":{"type":"int", "sql":"select count(*) from v_monitor.delete_vectors;"},
-    "last_backup_time":{"type":"float", "sql":"select EXTRACT(EPOCH FROM backup_timestamp)::INT from v_monitor.database_backups order by backup_timestamp desc limit 1;"},
+    "last_backup_time":{"type":"float", "sql":"select EXTRACT(EPOCH FROM backup_timestamp)::INT from v_monitor.database_backups union select 0 order by 1 desc limit 1;"},
     "ahm_time":{"type":"int", "sql":"select EXTRACT(EPOCH FROM time)::INT from system join vs_epochs on epoch_number = ahm_epoch;"},
     "ros_count":{"type":"int", "sql":"select max(ros_count) from v_monitor.projection_storage;"}
 }
