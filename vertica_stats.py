@@ -60,27 +60,32 @@ metrics = {
 ### 
 
 ### connection
-conn_info = {'host': options.host, 
-             'port': 5433, 
-             'user': options.username, 
-             'password': options.password, 
+conn_info = {'host': options.host,
+             'port': 5433,
+             'read_timeout': 20,
+             'user': options.username,
+             'password': options.password,
              'database': options.database}
+#in case of a failure we need to catch the error and return nothing to zabbix
+try:
 
-# simple connection, with manual close
-connection = vertica_python.connect(**conn_info)
-cur = connection.cursor()
+        # simple connection, with manual close
+        connection = vertica_python.connect(**conn_info)
+        cur = connection.cursor()
 
-# find the right metric
-for k,vh in metrics.items():
+        # find the right metric
+        for k,vh in metrics.items():
 
-    if (k == options.metric):
+                if (k == options.metric):
 
-        cur.execute(metrics[k]["sql"])
-        row = cur.fetchone()
-        if row:
-            print(row[0])
-        cur.close()
-        break
+                        cur.execute(metrics[k]["sql"])
+                        row = cur.fetchone()
+                        if row: 
+                                print(row[0])
+                        cur.close()
+                        break
 
-# close the connection
-connection.close()
+        # close the connection
+        connection.close()
+except: # catch *all* exceptions
+        print('')
